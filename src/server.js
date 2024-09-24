@@ -1,7 +1,8 @@
 const http = require('http');
 const query = require('querystring');
 
-const responseHandler = require('./responses.js');
+const jsonHandler = require('./jsonResponses.js');
+const htmlHandler = require('./htmlResponses.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
@@ -37,6 +38,8 @@ const parseBody = (request, response, handler) => {
       htmlHandler.getCSS(request, response);
     } else if (parsedUrl.pathname === '/getUsers') {
       jsonHandler.getUsers(request, response);
+    } else if (parsedUrl.pathname === '/notReal') { 
+      jsonHandler.notReal(request, response);
     } else {
       htmlHandler.getIndex(request, response);
     }
