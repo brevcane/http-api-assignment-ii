@@ -1,39 +1,27 @@
 const users = {};
 
 const respond = (request, response, status, object) => {
-    const content = JSON.stringify(object);
-    response.writeHead(status, {
-        'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(content, 'utf8'),
-    });
+  const content = JSON.stringify(object);
+  response.writeHead(status, {
+    'Content-Type': 'application/json',
+    'Content-Length': Buffer.byteLength(content, 'utf8'),
+  });
 
-    if (request.method !== 'HEAD' && status !== 204) {
-        response.write(content);
-    }
+  if (request.method !== 'HEAD' && status !== 204) {
+    response.write(content);
+  }
 
-    response.end();
+  response.end();
 };
 
-//getUsers
 const getUsers = (request, response) => {
-    const responseJSON = {
-        users
-    };
+  const responseJSON = {
+    users,
+  };
 
-    return respond(request, response, 200, responseJSON);
-}
+  return respond(request, response, 200, responseJSON);
+};
 
-//notReal
-const notReal = (request, response) => {
-    const responseJSON = {
-        id: "notFound",
-        message: "The page you are looking for was not found.",
-    };
-
-    return respond(request, response, 404, responseJSON);
-}
-
-//addUser
 const addUser = (request, response) => {
   const responseJSON = {
     message: 'Name and age are both required.',
@@ -41,10 +29,9 @@ const addUser = (request, response) => {
 
   const { name, age } = request.body;
 
-
   if (!name || !age) {
     responseJSON.id = 'addUserMissingParams';
-    return respondJSON(request, response, 400, responseJSON);
+    return respond(request, response, 400, responseJSON);
   }
 
   let responseCode = 204;
@@ -52,7 +39,7 @@ const addUser = (request, response) => {
   if (!users[name]) {
     responseCode = 201;
     users[name] = {
-      name: name,
+      name,
     };
   }
 
@@ -60,24 +47,23 @@ const addUser = (request, response) => {
 
   if (responseCode === 201) {
     responseJSON.message = 'Created Successfully';
-    return respondJSON(request, response, responseCode, responseJSON);
+    return respond(request, response, responseCode, responseJSON);
   }
 
-  return respondJSON(request, response, responseCode, {});
+  return respond(request, response, responseCode, {});
 };
 
 const notFound = (request, response) => {
-    const responseJSON = {
-        id: 'notFound',
-        message: 'The page you are looking for was not found.',
-    };
+  const responseJSON = {
+    id: 'notFound',
+    message: 'The page you are looking for was not found.',
+  };
 
-    return respond(request, response, 404, responseJSON);
+  return respond(request, response, 404, responseJSON);
 };
 
 module.exports = {
-    getUsers,
-    notReal,
-    addUser,
-    notFound,
+  getUsers,
+  addUser,
+  notFound,
 };
